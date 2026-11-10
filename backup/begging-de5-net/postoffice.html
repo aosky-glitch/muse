@@ -1,0 +1,556 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>赛博邮局 · 写给未来的信</title>
+<style>
+:root{
+  --bg:#0a0a14; --panel:#101024; --panel2:#141432; --ink:#e8f6ff; --muted:#8b93b8;
+  --cyan:#00f0ff; --pink:#ff2d78; --gold:#ffd60a; --lime:#39ff6a; --line:#26264d;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{-webkit-text-size-adjust:100%}
+body{background:var(--bg);color:var(--ink);font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Hiragino Sans GB","Microsoft YaHei",sans-serif;line-height:1.6;
+  background-image:linear-gradient(rgba(0,240,255,.04) 1px,transparent 1px),linear-gradient(90deg,rgba(0,240,255,.04) 1px,transparent 1px);background-size:32px 32px;}
+a{color:var(--cyan)}
+.pixel{font-family:"Press Start 2P",monospace;letter-spacing:1px}
+.wrap{max-width:720px;margin:0 auto;padding:0 16px 64px}
+/* nav */
+.nav{display:flex;gap:16px;align-items:center;padding:14px 0;font-size:14px}
+.nav a{color:var(--muted);text-decoration:none}
+.nav a:hover{color:var(--cyan)}
+.nav .here{color:var(--cyan)}
+/* hero */
+.hero{border:3px solid var(--cyan);background:var(--panel);padding:26px 20px 22px;box-shadow:6px 6px 0 rgba(0,240,255,.25);position:relative;overflow:hidden}
+.hero::after{content:"";position:absolute;inset:0;background:repeating-linear-gradient(0deg,transparent 0 3px,rgba(0,0,0,.18) 3px 4px);pointer-events:none}
+.hero h1{font-size:30px;line-height:1.25}
+.hero h1 .cy{color:var(--cyan)}
+.hero h1 .pk{color:var(--pink)}
+.hero p{color:var(--muted);margin-top:10px;font-size:15px}
+.ticker{margin-top:14px;font-size:12px;color:var(--lime);white-space:nowrap;overflow:hidden}
+.ticker span{display:inline-block;padding-left:100%;animation:tick 18s linear infinite}
+@keyframes tick{to{transform:translateX(-100%)}}
+/* notice */
+.notice{margin-top:16px;border:2px solid var(--gold);background:#1a1607;color:#ffe9a8;padding:12px 14px;font-size:13px;line-height:1.7}
+.notice b{color:var(--gold)}
+/* accel */
+.accel{margin-top:16px;border:2px solid var(--pink);background:var(--panel);padding:14px}
+.accel h2{font-size:14px;color:var(--pink);margin-bottom:8px}
+.accel .row{display:flex;gap:8px;flex-wrap:wrap}
+.accel .status{margin-top:10px;font-size:13px;color:var(--muted)}
+.accel .status b{color:var(--gold)}
+.accel .reset{margin-top:8px;font-size:12px;color:var(--muted);background:none;border:none;text-decoration:underline;cursor:pointer;padding:0}
+/* chips & buttons */
+.chip{border:2px solid var(--line);background:var(--panel2);color:var(--ink);padding:8px 14px;font-size:14px;cursor:pointer;border-radius:0}
+.chip.sel{border-color:var(--cyan);color:var(--cyan);background:#062a33;box-shadow:3px 3px 0 rgba(0,240,255,.3)}
+.chip.pink.sel{border-color:var(--pink);color:var(--pink);background:#33081a;box-shadow:3px 3px 0 rgba(255,45,120,.3)}
+.btn{display:block;width:100%;border:3px solid var(--cyan);background:var(--cyan);color:#04121a;font-size:17px;font-weight:700;padding:13px;cursor:pointer;border-radius:0;box-shadow:4px 4px 0 rgba(0,240,255,.35)}
+.btn:active{transform:translate(2px,2px);box-shadow:2px 2px 0 rgba(0,240,255,.35)}
+.btn.ghost{background:transparent;color:var(--cyan);border-color:var(--cyan);box-shadow:none}
+.btn.pink{border-color:var(--pink);background:var(--pink);color:#fff;box-shadow:4px 4px 0 rgba(255,45,120,.35)}
+/* tabs */
+.tabs{display:flex;gap:8px;margin-top:20px}
+.tab{flex:1;border:2px solid var(--line);background:var(--panel);color:var(--muted);padding:11px 4px;font-size:15px;cursor:pointer;text-align:center;border-radius:0;position:relative}
+.tab.sel{border-color:var(--cyan);color:var(--cyan);background:#062a33}
+.tab .bdg{position:absolute;top:-9px;right:6px;background:var(--pink);color:#fff;font-size:11px;line-height:1;padding:3px 6px;border:2px solid var(--bg)}
+.panel{margin-top:14px}
+/* form */
+.card{border:2px solid var(--line);background:var(--panel);padding:18px}
+.card h2{font-size:17px;margin-bottom:4px}
+.card .hint{font-size:13px;color:var(--muted);margin-bottom:14px}
+.field{margin-bottom:16px}
+.field label{display:block;font-size:14px;color:var(--cyan);margin-bottom:6px}
+.field input[type=text],.field textarea{width:100%;background:#05050f;border:2px solid var(--line);color:var(--ink);padding:11px 12px;font-size:15px;line-height:1.6;font-family:inherit;border-radius:0}
+.field input[type=text]:focus,.field textarea:focus{outline:none;border-color:var(--cyan)}
+.field textarea{min-height:150px;resize:vertical}
+.field .count{text-align:right;font-size:12px;color:var(--muted);margin-top:4px}
+.seg{display:flex;gap:8px;flex-wrap:wrap}
+.seg .chip{flex:1;min-width:100px;text-align:center}
+.seg .chip small{display:block;font-size:11px;color:var(--muted);margin-top:2px}
+.seg .chip.sel small{color:inherit}
+/* letters */
+.letter{border:2px solid var(--line);background:var(--panel);padding:16px;margin-bottom:12px;position:relative}
+.letter.sealed{border-style:dashed}
+.letter.arrived{border-color:var(--lime);box-shadow:4px 4px 0 rgba(57,255,106,.2)}
+.letter .top{display:flex;justify-content:space-between;gap:8px;align-items:flex-start}
+.letter .who{font-size:14px;color:var(--muted)}
+.letter .who b{color:var(--ink)}
+.letter .state{font-size:12px;padding:3px 8px;border:2px solid;white-space:nowrap}
+.letter .state.sealed{color:var(--gold);border-color:var(--gold)}
+.letter .state.arrived{color:var(--lime);border-color:var(--lime)}
+.letter .state.pool{color:var(--pink);border-color:var(--pink)}
+.letter .body{margin-top:10px;font-size:15px;white-space:pre-wrap;word-break:break-word}
+.letter .env{font-size:40px;line-height:1;text-align:center;padding:8px 0 2px}
+.letter .cd{text-align:center;color:var(--gold);font-size:14px;margin-top:4px}
+.letter .meta{margin-top:10px;font-size:12px;color:var(--muted)}
+.letter .openbtn{margin-top:12px}
+.letter .demo-tag{display:inline-block;font-size:11px;color:#1a1607;background:var(--gold);padding:2px 6px;font-weight:700;margin-left:6px;vertical-align:1px}
+.empty{border:2px dashed var(--line);padding:26px 16px;text-align:center;color:var(--muted);font-size:14px}
+.empty .big{font-size:34px;display:block;margin-bottom:8px}
+.group{font-size:13px;color:var(--muted);margin:18px 0 8px;letter-spacing:2px}
+.toast{position:fixed;left:50%;bottom:24px;transform:translateX(-50%) translateY(80px);background:var(--cyan);color:#04121a;font-weight:700;padding:12px 18px;font-size:15px;border:3px solid #04121a;box-shadow:4px 4px 0 rgba(0,0,0,.5);transition:transform .25s;z-index:50;max-width:92vw;text-align:center}
+.toast.show{transform:translateX(-50%) translateY(0)}
+.banner{display:none;border:2px solid var(--lime);background:#071a0c;color:#b9ffd0;padding:12px 14px;font-size:14px;margin-bottom:12px;cursor:pointer}
+.banner.show{display:block}
+.danger{margin-top:28px;text-align:center}
+.danger button{background:none;border:none;color:var(--muted);font-size:13px;text-decoration:underline;cursor:pointer}
+.shake{animation:shake .3s}
+@keyframes shake{25%{transform:translateX(-4px)}75%{transform:translateX(4px)}}
+footer{margin-top:36px;text-align:center;color:var(--muted);font-size:12px;line-height:1.9}
+footer a{color:var(--muted)}
+@media (max-width:480px){
+  .hero h1{font-size:24px}
+  .hero{padding:20px 16px}
+  .tab{font-size:13px}
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <nav class="nav">
+    <a href="/">← 回博客</a>
+    <a href="/simiao">赛博寺庙</a>
+    <a href="/wallpaper">壁纸铺</a>
+    <span class="here">赛博邮局</span>
+  </nav>
+
+  <header class="hero">
+    <h1><span class="cy">📮 赛博邮局</span><br><span class="pk">CYBER POST</span></h1>
+    <p>写一封信，给几天后的自己，或给一个陌生人。写完封存，到时间才送达。信在路上慢慢走，你在原地慢慢活。</p>
+    <div class="ticker"><span>SYSTEM ONLINE · 无需注册 · 信件只保存在你的浏览器本地 · 给陌生人的信只进入演示收信池 · NOTHING IS SENT TO REAL PEOPLE ·&nbsp;</span></div>
+  </header>
+
+  <div class="notice">
+    <b>先说清楚：</b>不用注册，不收集任何个人信息。信件只保存在<strong>你的浏览器本地</strong>，换设备、清缓存都会消失。给陌生人的信只进入<strong>演示收信池</strong>，不会发给真实的人。池子里的示例信件均为<strong>演示内容</strong>。
+  </div>
+
+  <section class="accel" id="accelBox">
+    <h2>⏩ 演示加速</h2>
+    <div class="row" id="speedRow">
+      <button class="chip" data-speed="off">正常时间</button>
+      <button class="chip" data-speed="x60">×60 慢速</button>
+      <button class="chip" data-speed="x3600">×3600 快速</button>
+      <button class="chip" data-speed="x86400">×86400 极速</button>
+    </div>
+    <div class="status" id="accelStatus">现在是正常时间。封存一封 3 天后送达的信，要等 3 天。</div>
+    <button class="reset" id="resetBoost">恢复正常时间（清零已快进的时间）</button>
+  </section>
+
+  <div class="tabs">
+    <button class="tab sel" data-tab="write">✉️ 写信</button>
+    <button class="tab" data-tab="inbox">📬 收信箱<span class="bdg" id="inboxBadge" style="display:none">0</span></button>
+    <button class="tab" data-tab="pool">🏛️ 陌生人来信</button>
+  </div>
+
+  <!-- 写信 -->
+  <section class="panel" id="tab-write">
+    <div class="card">
+      <h2>写一封信</h2>
+      <p class="hint">写给谁、写什么都由你。封存之后，在送达之前谁都打不开，包括你自己。</p>
+      <div class="field">
+        <label>收信人</label>
+        <div class="seg" id="toSeg">
+          <button type="button" class="chip sel" data-to="self">🪞 未来的我<small>到期回到你的收信箱</small></button>
+          <button type="button" class="chip pink" data-to="stranger">🌍 一个陌生人<small>只进演示收信池</small></button>
+        </div>
+      </div>
+      <div class="field">
+        <label>你的名字（可选）</label>
+        <input type="text" id="fromName" maxlength="20" placeholder="不填就是：匿名">
+      </div>
+      <div class="field">
+        <label>信的内容</label>
+        <textarea id="letterBody" maxlength="2000" placeholder="写给几天后的自己，或写给一个素未谋面的陌生人……"></textarea>
+        <div class="count"><span id="charCount">0</span> / 2000 字</div>
+      </div>
+      <div class="field">
+        <label>什么时候送达</label>
+        <div class="seg" id="daysSeg">
+          <button type="button" class="chip sel" data-days="3">3 天后</button>
+          <button type="button" class="chip" data-days="7">7 天后</button>
+          <button type="button" class="chip" data-days="30">30 天后</button>
+          <button type="button" class="chip" data-days="365">1 年后</button>
+        </div>
+      </div>
+      <button class="btn" id="sealBtn">✉️ 封存这封信</button>
+      <p class="hint" style="margin:12px 0 0" id="sealHint"></p>
+    </div>
+  </section>
+
+  <!-- 收信箱 -->
+  <section class="panel" id="tab-inbox" style="display:none">
+    <div class="banner" id="dueBanner"></div>
+    <div class="group">— 写给未来的我 —</div>
+    <div id="myLetters"></div>
+    <div class="group">— 我寄给陌生人的信 —</div>
+    <div id="sentLetters"></div>
+  </section>
+
+  <!-- 陌生人来信 -->
+  <section class="panel" id="tab-pool" style="display:none">
+    <div class="card" style="margin-bottom:14px">
+      <h2>🏛️ 陌生人来信 · 演示收信池</h2>
+      <p class="hint" style="margin-bottom:0">这里的信都来自素未谋面的人。池子里的信<strong>全部是演示内容</strong>，不会发给真实的人，也不会真的寄出。你写给陌生人的信，到期后也会出现在这里，标明“来自陌生人 · 演示”。</p>
+    </div>
+    <div id="poolLetters"></div>
+  </section>
+
+  <div class="danger">
+    <button id="clearBtn">🧹 清空本地保存的信件和快进时间</button>
+  </div>
+
+  <footer>
+    赛博邮局 · begging.de5.net/postoffice<br>
+    信件只活在你的浏览器里 · 演示内容请勿当真<br>
+    <a href="/">回博客</a> · <a href="/simiao">赛博寺庙</a> · <a href="/tip">打赏</a>
+  </footer>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+(function(){
+"use strict";
+var KEY = "postoffice_v1";
+var SPEEDS = { off: 1, x60: 60, x3600: 3600, x86400: 86400 };
+var SPEED_LABEL = { off: "正常时间", x60: "×60 慢速（1 秒 = 1 分钟）", x3600: "×3600 快速（1 秒 = 1 小时）", x86400: "×86400 极速（1 秒 = 1 天）" };
+
+var DEMO_POOL = [
+  { from: "一位熬夜的程序员", body: "如果你也睡不着，那就别睡了，起来看星星。代码明天再写，月亮今晚就走。", demo: true },
+  { from: "阿南 · 高三学生", body: "写给陌生人：我今天数学考砸了，但晚饭很好吃。生活就是这样，坏事和好事轮流来。", demo: true },
+  { from: "猫奴 · 刚搬家", body: "新家的窗台很大，猫已经占领了它。我想告诉你，换个地方生活，真的可以重新开始。", demo: true }
+];
+
+var state = load();
+var currentTab = "write";
+var selTo = "self", selDays = 3;
+var lastTick = Date.now();
+var newArrivals = 0;
+
+function load(){
+  try {
+    var raw = localStorage.getItem(KEY);
+    if (raw) { var s = JSON.parse(raw); if (s && Array.isArray(s.letters)) return s; }
+  } catch(e) {}
+  return { letters: [], boost: 0, accel: "off", accelSince: null };
+}
+function save(){
+  try { localStorage.setItem(KEY, JSON.stringify(state)); } catch(e) {}
+}
+function esc(s){
+  return String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;");
+}
+function effNow(){
+  var b = state.boost || 0;
+  if (state.accel !== "off" && state.accelSince) b += (Date.now() - state.accelSince) * (SPEEDS[state.accel] - 1);
+  return Date.now() + b;
+}
+function fmtDate(ts){
+  var d = new Date(ts);
+  return d.getFullYear() + "年" + (d.getMonth()+1) + "月" + d.getDate() + "日";
+}
+function fmtRemain(ms){
+  if (ms <= 0) return "到了";
+  var s = Math.floor(ms/1000);
+  var d = Math.floor(s/86400); s -= d*86400;
+  var h = Math.floor(s/3600); s -= h*3600;
+  var m = Math.floor(s/60); s -= m*60;
+  if (d > 0) return "还有 " + d + " 天 " + h + " 小时";
+  if (h > 0) return "还有 " + h + " 小时 " + m + " 分";
+  if (m > 0) return "还有 " + m + " 分 " + s + " 秒";
+  return "还有 " + s + " 秒";
+}
+function fmtBoost(ms){
+  var d = Math.floor(ms/86400000);
+  var h = Math.floor((ms%86400000)/3600000);
+  if (d > 0) return d + " 天 " + h + " 小时";
+  if (h > 0) return h + " 小时";
+  var m = Math.floor(ms/60000);
+  if (m > 0) return m + " 分钟";
+  return Math.floor(ms/1000) + " 秒";
+}
+function toast(msg){
+  var t = document.getElementById("toast");
+  t.textContent = msg;
+  t.classList.add("show");
+  setTimeout(function(){ t.classList.remove("show"); }, 2600);
+}
+
+function sealLetter(){
+  var body = document.getElementById("letterBody").value.trim();
+  var from = document.getElementById("fromName").value.trim() || "匿名";
+  if (!body) {
+    var ta = document.getElementById("letterBody");
+    ta.classList.add("shake");
+    setTimeout(function(){ ta.classList.remove("shake"); }, 350);
+    document.getElementById("sealHint").textContent = "先写点什么，再封存。";
+    ta.focus();
+    return;
+  }
+  var now = Date.now();
+  var letter = {
+    id: "L" + now.toString(36) + Math.floor(Math.random()*1296).toString(36),
+    to: selTo, from: from, body: body, days: selDays,
+    sealedAt: now, deliverAt: now + selDays*86400000,
+    arrived: false, opened: false
+  };
+  state.letters.push(letter);
+  save();
+  document.getElementById("letterBody").value = "";
+  document.getElementById("charCount").textContent = "0";
+  var hint = selTo === "self"
+    ? "已封存，" + fmtDate(letter.deliverAt) + " 回到你的收信箱。到期之前打不开哦。"
+    : "已封存，" + fmtDate(letter.deliverAt) + " 进入演示收信池。只作演示，不会发给真实的人。";
+  document.getElementById("sealHint").textContent = hint;
+  toast("✉️ 信已封存");
+  renderAll();
+  switchTab("inbox");
+}
+
+function letterCard(l, opts){
+  opts = opts || {};
+  var due = l.deliverAt <= effNow();
+  var div = document.createElement("div");
+  div.className = "letter" + (due ? " arrived" : " sealed");
+  var top = document.createElement("div");
+  top.className = "top";
+  var who = document.createElement("div");
+  who.className = "who";
+  who.innerHTML = "寄信人：<b>" + esc(l.from) + "</b><br>封存于 " + fmtDate(l.sealedAt) + " · " + (l.days >= 365 ? "1 年后送达" : l.days + " 天后送达");
+  top.appendChild(who);
+  var st = document.createElement("span");
+  st.className = "state " + (due ? "arrived" : "sealed");
+  st.textContent = due ? "📬 已送达" : "✉️ 封存中";
+  top.appendChild(st);
+  div.appendChild(top);
+  if (!due) {
+    var env = document.createElement("div");
+    env.className = "env";
+    env.textContent = "✉️";
+    div.appendChild(env);
+    var cd = document.createElement("div");
+    cd.className = "cd";
+    cd.setAttribute("data-cd", l.id);
+    cd.textContent = fmtRemain(l.deliverAt - effNow());
+    div.appendChild(cd);
+    var meta = document.createElement("div");
+    meta.className = "meta";
+    meta.textContent = "到期之前打不开。开演示加速可以快进时间。";
+    div.appendChild(meta);
+  } else {
+    if (!l.opened) {
+      var btn = document.createElement("button");
+      btn.className = "btn ghost openbtn";
+      btn.textContent = "📖 打开这封信";
+      btn.onclick = function(){ l.opened = true; save(); renderAll(); };
+      div.appendChild(btn);
+    } else {
+      var body = document.createElement("div");
+      body.className = "body";
+      body.textContent = l.body;
+      div.appendChild(body);
+      var meta2 = document.createElement("div");
+      meta2.className = "meta";
+      meta2.textContent = "送达于 " + fmtDate(l.deliverAt) + (opts.pool ? " · 来自陌生人 · 演示" : "");
+      div.appendChild(meta2);
+    }
+  }
+  return div;
+}
+
+function poolCard(p){
+  var div = document.createElement("div");
+  div.className = "letter arrived";
+  var top = document.createElement("div");
+  top.className = "top";
+  var who = document.createElement("div");
+  who.className = "who";
+  who.innerHTML = "寄信人：<b>" + esc(p.from) + "</b><span class=\"demo-tag\">演示信件</span>";
+  top.appendChild(who);
+  var st = document.createElement("span");
+  st.className = "state pool";
+  st.textContent = "🏛️ 演示池";
+  top.appendChild(st);
+  div.appendChild(top);
+  var body = document.createElement("div");
+  body.className = "body";
+  body.textContent = p.body;
+  div.appendChild(body);
+  var meta = document.createElement("div");
+  meta.className = "meta";
+  meta.textContent = "演示内容 · 不会发给真实的人" + (p.arrivedDate ? " · 送达于 " + p.arrivedDate : "");
+  div.appendChild(meta);
+  return div;
+}
+
+function renderInbox(){
+  var mine = state.letters.filter(function(l){ return l.to === "self"; }).slice().sort(function(a,b){ return b.sealedAt - a.sealedAt; });
+  var sent = state.letters.filter(function(l){ return l.to === "stranger"; }).slice().sort(function(a,b){ return b.sealedAt - a.sealedAt; });
+  var box = document.getElementById("myLetters");
+  box.innerHTML = "";
+  if (!mine.length) {
+    box.innerHTML = '<div class="empty"><span class="big">🕊️</span>还没有写给未来的信。<br>去写一封，几天后再回来拆。</div>';
+  } else {
+    mine.forEach(function(l){ box.appendChild(letterCard(l)); });
+  }
+  var box2 = document.getElementById("sentLetters");
+  box2.innerHTML = "";
+  if (!sent.length) {
+    box2.innerHTML = '<div class="empty"><span class="big">🌍</span>还没有寄给陌生人的信。<br>写一封丢进演示池，到期后会出现在“陌生人来信”里。</div>';
+  } else {
+    sent.forEach(function(l){
+      var due = l.deliverAt <= effNow();
+      var card = letterCard(l, { pool: true });
+      box2.appendChild(card);
+      if (due) {
+        var note = document.createElement("div");
+        note.className = "meta";
+        note.style.cssText = "margin:-4px 0 12px;color:var(--pink)";
+        note.textContent = "已进入演示收信池（陌生人来信）。";
+        box2.appendChild(note);
+      }
+    });
+  }
+  var dueCount = state.letters.filter(function(l){ return l.to === "self" && l.deliverAt <= effNow() && !l.opened; }).length;
+  var badge = document.getElementById("inboxBadge");
+  if (dueCount > 0) { badge.style.display = ""; badge.textContent = dueCount; }
+  else { badge.style.display = "none"; }
+  var banner = document.getElementById("dueBanner");
+  if (newArrivals > 0) {
+    banner.textContent = "📬 你有 " + newArrivals + " 封信到了，点这里看看。";
+    banner.classList.add("show");
+    banner.onclick = function(){ newArrivals = 0; renderAll(); };
+  } else {
+    banner.classList.remove("show");
+  }
+}
+
+function renderPool(){
+  var box = document.getElementById("poolLetters");
+  box.innerHTML = "";
+  DEMO_POOL.forEach(function(p){ box.appendChild(poolCard(p)); });
+  var arrived = state.letters.filter(function(l){ return l.to === "stranger" && l.deliverAt <= effNow(); }).slice().sort(function(a,b){ return b.deliverAt - a.deliverAt; });
+  arrived.forEach(function(l){
+    box.appendChild(poolCard({ from: l.from, body: l.body, demo: true, arrivedDate: fmtDate(l.deliverAt) }));
+  });
+}
+
+function renderAccel(){
+  var row = document.getElementById("speedRow");
+  Array.prototype.forEach.call(row.children, function(btn){
+    btn.classList.toggle("sel", btn.getAttribute("data-speed") === state.accel);
+  });
+  var st = document.getElementById("accelStatus");
+  var boost = state.boost || 0;
+  if (state.accel === "off") {
+    st.innerHTML = boost > 0
+      ? "现在是正常时间。演示时间已快进 <b>" + fmtBoost(boost) + "</b>，信件按快进后的时间送达。"
+      : "现在是正常时间。封存一封 3 天后送达的信，要等 3 天。";
+  } else {
+    st.innerHTML = "演示加速中：" + SPEED_LABEL[state.accel] + "。已快进 <b>" + fmtBoost(boost) + "</b>，倒计时正在飞速走。";
+  }
+}
+
+function renderAll(){
+  renderAccel();
+  renderInbox();
+  renderPool();
+}
+
+function checkArrivals(){
+  var now = effNow();
+  var fresh = 0;
+  state.letters.forEach(function(l){
+    if (!l.arrived && l.deliverAt <= now) { l.arrived = true; fresh++; }
+  });
+  if (fresh > 0) {
+    newArrivals += fresh;
+    save();
+    renderAll();
+    toast("📬 有 " + fresh + " 封信到了！");
+  }
+}
+
+function tick(){
+  var now = Date.now();
+  if (state.accel !== "off" && state.accelSince) {
+    state.boost = (state.boost || 0) + (now - state.accelSince) * (SPEEDS[state.accel] - 1);
+    state.accelSince = now;
+    save();
+  }
+  lastTick = now;
+  var en = effNow();
+  Array.prototype.forEach.call(document.querySelectorAll("[data-cd]"), function(el){
+    var l = null;
+    for (var i = 0; i < state.letters.length; i++) if (state.letters[i].id === el.getAttribute("data-cd")) { l = state.letters[i]; break; }
+    if (l) el.textContent = fmtRemain(l.deliverAt - en);
+  });
+  renderAccel();
+  checkArrivals();
+}
+
+function switchTab(name){
+  currentTab = name;
+  Array.prototype.forEach.call(document.querySelectorAll(".tab"), function(t){
+    t.classList.toggle("sel", t.getAttribute("data-tab") === name);
+  });
+  document.getElementById("tab-write").style.display = name === "write" ? "" : "none";
+  document.getElementById("tab-inbox").style.display = name === "inbox" ? "" : "none";
+  document.getElementById("tab-pool").style.display = name === "pool" ? "" : "none";
+  if (name === "inbox") { newArrivals = 0; renderAll(); }
+}
+
+function setSpeed(sp){
+  if (state.accel !== "off" && state.accelSince) {
+    state.boost = (state.boost || 0) + (Date.now() - state.accelSince) * (SPEEDS[state.accel] - 1);
+  }
+  state.accel = sp;
+  state.accelSince = sp === "off" ? null : Date.now();
+  save();
+  renderAccel();
+  if (sp !== "off") toast("⏩ 演示加速已开启：" + SPEED_LABEL[sp]);
+}
+
+document.getElementById("sealBtn").addEventListener("click", sealLetter);
+document.getElementById("letterBody").addEventListener("input", function(){
+  document.getElementById("charCount").textContent = this.value.length;
+  document.getElementById("sealHint").textContent = "";
+});
+Array.prototype.forEach.call(document.querySelectorAll("#toSeg .chip"), function(c){
+  c.addEventListener("click", function(){
+    selTo = c.getAttribute("data-to");
+    Array.prototype.forEach.call(document.querySelectorAll("#toSeg .chip"), function(x){ x.classList.toggle("sel", x === c); });
+  });
+});
+Array.prototype.forEach.call(document.querySelectorAll("#daysSeg .chip"), function(c){
+  c.addEventListener("click", function(){
+    selDays = parseInt(c.getAttribute("data-days"), 10);
+    Array.prototype.forEach.call(document.querySelectorAll("#daysSeg .chip"), function(x){ x.classList.toggle("sel", x === c); });
+  });
+});
+Array.prototype.forEach.call(document.querySelectorAll(".tab"), function(t){
+  t.addEventListener("click", function(){ switchTab(t.getAttribute("data-tab")); });
+});
+Array.prototype.forEach.call(document.querySelectorAll("#speedRow .chip"), function(c){
+  c.addEventListener("click", function(){ setSpeed(c.getAttribute("data-speed")); });
+});
+document.getElementById("resetBoost").addEventListener("click", function(){
+  state.boost = 0; state.accel = "off"; state.accelSince = null;
+  save(); renderAccel(); toast("时间已恢复正常");
+});
+document.getElementById("clearBtn").addEventListener("click", function(){
+  if (!confirm("确定清空本地保存的全部信件和快进时间吗？此操作无法恢复。")) return;
+  try { localStorage.removeItem(KEY); } catch(e) {}
+  state = { letters: [], boost: 0, accel: "off", accelSince: null };
+  newArrivals = 0;
+  renderAll();
+  toast("本地数据已清空");
+});
+
+renderAll();
+setInterval(tick, 1000);
+})();
+</script>
+</body>
+</html>
